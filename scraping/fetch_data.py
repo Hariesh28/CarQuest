@@ -96,7 +96,7 @@ def get_all_variants(raw_data: dict) -> list[str] | None:
         except (KeyError, TypeError):
             continue
 
-        url = BASE_URL + '_'.join(about_car['modelName'].split()) + '/' +'_'.join(about_car['carVariantId'].split()) + URL_EXTENSION
+        url = BASE_URL + '_'.join(about_car['modelName'].split()) + '/' + '_'.join(about_car['carVariantId'].split()) + URL_EXTENSION
 
         all_urls.append(url)
 
@@ -105,19 +105,103 @@ def get_all_variants(raw_data: dict) -> list[str] | None:
 def delay() -> None:
     time.sleep(random.uniform(2, 5))
 
+def extract_data(params):
+
+    data = {}
+
+    for parm in params:
+
+        for item in parm['items']:
+
+            for key, value in parm['values'].items():
+
+                if item['text'] == key:
+                    data[value] = item['value']
+
+                elif key.lower() in item['text'].lower():
+                    data[value] = item['value']
+
+    return data
+
 def get_variant_data(raw_data: dict) -> dict | None:
 
-    # useful_data = {}
+    dataSpecs = raw_data['data']['specs']
 
-    # specs_data = raw_data['data']['specs']
-    # useful_data.update(specs_data)
+    params = [
+        {
+            'items': dataSpecs['specification'][0]['items'],
+            'values': {
+                'Displacement': 'displacement',
+                'Max Power': 'bhp',
+                'Max Torque': 'torque',
+                'No. of Cylinders': 'no_of_cylinders',
+                'Transmission Type': 'transmission',
+                'Gearbox': 'gearbox',
+                'Drive Type': 'drive_type'
+            },
+        },
 
-    # useful_data['params'] = raw_data['params']
-    # useful_data['overView'] = raw_data['overView']
-    # useful_data['Mileage'] = raw_data['data']['quickOverview']['keyAndFeatureList'][-2]
-    # useful_data['color_text'] = raw_data['data']['variantHighlight']['description']
-    # useful_data['otherCityPrice'] = raw_data['data']['priceOtherCityTable']['items'][0]
-    # useful_data['dataLayer'] = raw_data['data']['dataLayer']
+        {
+            'items': dataSpecs['specification'][1]['items'],
+            'values': {
+
+                'mileage': 'mileage',
+                'capacity': 'capacity'
+            }
+        },
+
+        {
+            'items': dataSpecs['specification'][2]['items'],
+            'values': {
+                'Front Brake Type': 'front_brake',
+                'Rear Brake Type': 'rear_brake'
+            }
+        },
+
+        {
+            'items': dataSpecs['specification'][3]['items'],
+            'values': {
+                'Boot Space': 'boot_space',
+                'Seating Capacity': 'seating_capacity',
+                'ground clearance': 'ground_clearance',
+                'Wheel Base': 'wheel_base',
+                'Gross Weight': 'gross_weight'
+            }
+        },
+
+        {
+            'items': dataSpecs['featured'][0]['items'],
+            'values': {
+                'Cruise Control': 'cruise_control',
+                'KeyLess Entry': 'keyLess_entry',
+                'Engine Start/Stop Button': 'engine_start/stop_button',
+                'Drive Modes': 'drive_modes',
+                'Drive Mode Types': 'drive_mode_types',
+                'Parking Sensors': 'parking_sensors'
+            }
+        },
+
+        {
+            'items': dataSpecs['featured'][2]['items'],
+            'values': {
+                'Tyre Size': 'tyre_size',
+                'Tyre Type': 'tyre_type',
+                'LED Headlamps': 'LED_headlamps'
+            }
+        },
+
+        {
+            'items': dataSpecs['featured'][3]['items'],
+            'values': {
+                'No. of Airbags': 'no_of_airbags',
+                'Rear Camera': 'rear_camera',
+                'Hill Assist': 'hill_assist',
+                'Global NCAP Safety Rating': 'NCAP_rating',
+                'Touchscreen': 'touchscreen',
+                'Android Auto': 'android_auto'
+            }
+        }
+    ]
 
     data = {}
     dataLayer = raw_data['dataLayer'][0]
@@ -128,59 +212,17 @@ def get_variant_data(raw_data: dict) -> dict | None:
     data['price'] = dataLayer['price_segment']
     data['fuel'] = dataLayer['fuel_type']
 
-    dataSpecs = raw_data['data']['specs']
-    for item in dataSpecs['specification'][0]['items']:
-
-        if item['text'] == 'Displacement':
-            data['displacement'] = item['value']
-
-        if item['text'] == 'Max Power':
-            data['bhp'] = item['value']
-
-        if item['text'] == 'Max Torque':
-            data['torque'] = item['value']
-
-        if item['text'] == 'No. of Cylinders':
-            data['No. of Cylinders'] = item['value']
-
-        if item['text'] == 'Transmission Type':
-            data['Transmission'] = item['value']
-
-        if item['text'] == 'Gearbox':
-            data['Gearbox'] = item['value']
-
-        if item['text'] == 'Drive Type':
-            data['Drive Type'] = item['value']
-
-    for item in dataSpecs['specification'][1]['items']:
-
-        if 'mileage' in item['text'].lower():
-            data['mileage'] = item['value']
-
-        if 'capacity' in item['text'].lower():
-            data['Fuel Tank Capacity'] = item['value']
-
-    for item in dataSpecs['specification'][2]['items']:
-
-        if item['text'] == 'Front Brake Type':
-            data['Front Brake Type'] = item['value']
-
-        if item['text'] == 'Rear Brake Type':
-            data['Rear Brake Type'] = item['value']
-
-    for item in dataSpecs['specification'][3]['items']:
-
-        if item['text'] == 'Boot Space':
-            data['Boot Space'] = item['value']
-
-        if item['text'] == 'Seating Capacity':
-            data['Seating Capacity'] = item['value']
-
-        if 'ground clearance' in item['text'].lower():
-            data['Ground Clearance'] = item['value']
-
-        if item['text'] == 'Wheel Base':
-            data['Wheel Base'] = item['value']
-
+    data.update(extract_data(params))
     print(data)
+
+    return data
+
+def normalize_data(data:dict[list[dict[str:str]]]) -> dict[list[dict[str:str]]]:
+
+    fieldnames = list({key for row in data for key in row.keys()})
+
+    for row in data:
+        for field in fieldnames:
+            row.setdefault(field, None)
+
     return data

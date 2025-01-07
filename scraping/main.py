@@ -22,16 +22,23 @@ for url in urls:
 
         raw_variant = fetch_data.get_raw_data(url=variant)
         variant_data = fetch_data.get_variant_data(raw_data=raw_variant)
+
+        variant_data['url'] = variant
+
         all_data.append(variant_data)
 
         fetch_data.delay()
 
+
 with open(OUTPUT_FILE, mode='w', newline='', encoding='utf-8') as file:
 
-    writer = csv.DictWriter(file, fieldnames=all_data[0].keys())
+    normalized_data = fetch_data.normalize_data(data=all_data)
+    fieldnames = list(normalized_data[0].keys()) if normalized_data else []
+
+    writer = csv.DictWriter(file, fieldnames=fieldnames)
 
     writer.writeheader()
 
-    writer.writerows(all_data)
+    writer.writerows(fetch_data.normalize_data(data=all_data))
 
 print(f"Data written to {OUTPUT_FILE} successfully!")
