@@ -4,11 +4,15 @@ import fetch_data
 
 OUTPUT_DIR = os.path.join("data")
 OUTPUT_FILE = os.path.join(OUTPUT_DIR, "car_details.csv")
+URL_FILE = os.path.join(OUTPUT_DIR, "urls.txt")
 
-urls = [
-    'https://www.cardekho.com/tata/nexon',
-    'https://www.cardekho.com/carmodels/Toyota/Toyota_Fortuner'
-]
+os.makedirs(OUTPUT_DIR, exist_ok=True)
+
+def load_urls(file_path):
+    with open(file_path, 'r') as file:
+        return [line.strip() for line in file if line.strip()]
+
+urls = load_urls(URL_FILE)
 
 all_data = []
 total_urls = 0
@@ -24,7 +28,7 @@ for url in urls:
         print(f"Error fetching data for URL {url}: {e}")
         variants = []
 
-    for variant in variants[:7]:
+    for variant in variants:
 
         total_urls += 1
 
