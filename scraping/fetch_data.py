@@ -213,7 +213,6 @@ def get_variant_data(raw_data: dict) -> dict | None:
     data['fuel'] = dataLayer['fuel_type']
 
     data.update(extract_data(params))
-    print(data)
 
     return data
 
