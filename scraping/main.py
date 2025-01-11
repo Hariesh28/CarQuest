@@ -34,7 +34,15 @@ for url in urls:
             print(f"Error fetching raw data for variant {variant}: {e}")
             raw_variant = None
 
-        variant_data['url'] = variant
+        try:
+            if raw_variant:
+                variant_data = fetch_data.get_variant_data(raw_data=raw_variant)
+                variant_data['url'] = variant
+            else:
+                variant_data = {}
+        except Exception as e:
+            print(f"Error extracting variant data for {variant}: {e}")
+            variant_data = {}
 
         if variant_data:
             all_data.append(variant_data)
