@@ -35,14 +35,8 @@ def get_raw_data(url: str) -> dict | None:
 
         response = requests.get(url, headers=headers, timeout=10)
 
-        if response.status_code == 200:
-            print(f"Request {url} successful!")
-
-        else:
-            print(f"Request {url} failed with status code: {response.status_code}")
-
     except requests.exceptions.RequestException as e:
-        print(f"Error during request {url}: {e}")
+        pass
 
     soup = BeautifulSoup(response.text, 'html.parser')
 
@@ -63,15 +57,12 @@ def get_raw_data(url: str) -> dict | None:
             raw_data = json.loads(json_data)
 
         except json.JSONDecodeError:
-            print(f'JSON is malformed or incomplete: {url}')
             raw_data = None
 
         except Exception as e:
-            print(f'Unexpected Error in {url}: {e}')
             raw_data = None
 
     else:
-        print(f'No script found with specified content: {url}')
         raw_data = None
 
     return raw_data
@@ -85,7 +76,6 @@ def get_all_variants(raw_data: dict) -> list[str] | None:
         data = raw_data['variantTable']['variantList']
 
     except (KeyError, TypeError) as e:
-        print(e)
         return
 
     for i in range(len(data)):
