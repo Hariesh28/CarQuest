@@ -13,57 +13,79 @@ def load_urls(file_path):
         return [line.strip() for line in file if line.strip()]
 
 urls = load_urls(URL_FILE)
+total_urls_count = len(urls)
 
-all_data = []
-total_urls = 0
+buffer_size = 100
+buffer = []
+processed_urls_model = 0  # Counter to track the number of processed model URLs
+ # Counter to track the number of processed  variant URLs
+total_variants = 0  # Counter to track the total number of variants
 
-for url in urls:
-
-    try:
-        raw = fetch_data.get_raw_data(url=url)
-        variants = fetch_data.get_all_variants(raw_data=raw)
-        fetch_data.delay()
-
-    except Exception as e:
-        print(f"Error fetching data for URL {url}: {e}")
-        variants = []
-
-    for variant in variants:
-
-        total_urls += 1
-
-        try:
-            raw_variant = fetch_data.get_raw_data(url=variant)
-        except Exception as e:
-            print(f"Error fetching raw data for variant {variant}: {e}")
-            raw_variant = None
-
-        try:
-            if raw_variant:
-                variant_data = fetch_data.get_variant_data(raw_data=raw_variant)
-                variant_data['url'] = variant
-            else:
-                variant_data = {}
-        except Exception as e:
-            print(f"Error extracting variant data for {variant}: {e}")
-            variant_data = {}
-
-        if variant_data:
-            all_data.append(variant_data)
-
-        fetch_data.delay()
-
-
+# Open the output CSV file once and write incrementally
 with open(OUTPUT_FILE, mode='w', newline='', encoding='utf-8') as file:
+    writer = None  # Will be initialized after the first normalized data
+    
+    for url in urls:
+        processed_urls_variant = 0 
+        try:
+            raw = fetch_data.get_raw_data(url=url)
+            variants = fetch_data.get_all_variants(raw_data=raw)
+            fetch_data.delay()
+        except Exception as e:
+            print(f"Error fetching data for URL {url}: {e}")
+            variants = []
 
-    normalized_data = fetch_data.normalize_data(data=all_data)
-    fieldnames = list(normalized_data[0].keys()) if normalized_data else []
+        total_urls_variants_count = len(variants)
+        for variant in variants:
+            total_variants += 1
+            try:
+                raw_variant = fetch_data.get_raw_data(url=variant)
+            except Exception as e:
+                print(f"Error fetching raw data for variant {variant}: {e}")
+                raw_variant = None
 
-    writer = csv.DictWriter(file, fieldnames=fieldnames)
+            try:
+                if raw_variant:
+                    variant_data = fetch_data.get_variant_data(raw_data=raw_variant)
+                    variant_data['url'] = variant
+                else:
+                    variant_data = {}
+            except Exception as e:
+                print(f"Error extracting variant data for {variant}: {e}")
+                variant_data = {}
 
-    writer.writeheader()
+            processed_urls_variant += 1
+            if variant_data:
+                print(f"Processed Variants {processed_urls_variant}/{total_urls_variants_count} URLs....")
+                buffer.append(variant_data)
 
-    writer.writerows(fetch_data.normalize_data(data=all_data))
+            # Write to the CSV file if buffer is full
+            if len(buffer) >= buffer_size:
+                normalized_data = fetch_data.normalize_data(data=buffer)
+                if not writer and normalized_data:  # Initialize writer on first data batch
+                    fieldnames = list(normalized_data[0].keys())
+                    writer = csv.DictWriter(file, fieldnames=fieldnames)
+                    writer.writeheader()
+                if normalized_data:
+                    writer.writerows(normalized_data)
+                buffer.clear()  # Clear the buffer after writing
+
+            fetch_data.delay()
+
+        # Increment processed URLs and print progress
+        processed_urls_model += 1
+        print(f"Processed Models {processed_urls_model}/{total_urls_count} URLs....")
+
+    # Write remaining data in buffer to the file
+    if buffer:
+        normalized_data = fetch_data.normalize_data(data=buffer)
+        if not writer and normalized_data:  # Initialize writer if not already done
+            fieldnames = list(normalized_data[0].keys())
+            writer = csv.DictWriter(file, fieldnames=fieldnames)
+            writer.writeheader()
+        if normalized_data:
+            writer.writerows(normalized_data)
 
 print(f"Data written to {OUTPUT_FILE} successfully!")
-print(f'Tried {total_urls}, found {len(all_data)}')
+print(f"Processed {processed_urls}/{total_urls_count} URLs.")
+print(f"Tried {total_variants} variants, found {len(buffer)} in the last batch.")
