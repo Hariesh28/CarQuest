@@ -1,6 +1,9 @@
 import os
 import csv
+import time
 import fetch_data
+
+start_time = time.time()
 
 OUTPUT_DIR = os.path.join("data")
 OUTPUT_FILE = os.path.join(OUTPUT_DIR, "car_details.csv")
@@ -127,3 +130,11 @@ print(f'Total Number of Models Processed: {total_models_count}')
 print(f'Total Number of urls Processed: {total_urls}')
 print(f'Total Number of failed urls: {total_failed_urls}')
 print(f'Success Rate: {(total_urls-total_failed_urls)/total_urls*100:.3f}%')
+
+elapsed_time = time.time() - start_time
+
+hours = int(elapsed_time // 3600)
+minutes = int((elapsed_time % 3600) // 60)
+seconds = int(elapsed_time % 60)
+
+print(f"Total time taken: {hours} hrs : {minutes} mins : {seconds} secs")
