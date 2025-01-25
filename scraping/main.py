@@ -53,6 +53,8 @@ with open(OUTPUT_FILE, mode='w', newline='', encoding='utf-8') as file:
             failed_urls.append({'url' : url, 'type' : 'model', 'cause' : e})
             variants = []
 
+        if variants is None: variants = []
+
         total_variants = len(variants)
 
         for variant in variants:
@@ -88,33 +90,20 @@ with open(OUTPUT_FILE, mode='w', newline='', encoding='utf-8') as file:
 
             print(f'Processed Variants {processed_variant_urls}/{total_variants} ({processed_variant_urls/total_variants*100:.2f}%) Failed Variants: {failed_variant_urls} ({failed_variant_urls/total_variants*100:.2f}%)', end='\r')
 
-            if len(buffer) >= BUFFER_SIZE:
-                normalized_data = fetch_data.normalize_data(data=buffer)
-                print('hi')
-                if not writer and normalized_data:
-                    fieldnames = list(normalized_data[0].keys())
-
-                    writer = csv.DictWriter(file, fieldnames=fieldnames)
-                    writer.writeheader()
-
-                if normalized_data:
-                    writer.writerows(normalized_data)
-
-                buffer.clear()
-
-            fetch_data.delay()
-
 
     normalized_data = fetch_data.normalize_data(data=buffer)
 
-    if not writer and normalized_data:
+    if normalized_data:
         fieldnames = list(normalized_data[0].keys())
 
         writer = csv.DictWriter(file, fieldnames=fieldnames)
         writer.writeheader()
 
-    if normalized_data:
-        writer.writerows(normalized_data)
+        for i in range(0, len(normalized_data), BUFFER_SIZE):
+
+            writer.writerows(normalized_data[i:i+BUFFER_SIZE])
+            print(f"Written rows {i} to {min(i + BUFFER_SIZE, len(normalized_data))}...")
+
 
     buffer.clear()
 
