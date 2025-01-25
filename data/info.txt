@@ -1,0 +1,6 @@
+Data written to data/car_details.csv successfully!
+Total Number of Models Processed: 428
+Total Number of urls Processed: 1951
+Total Number of failed urls: 25
+Success Rate: 98.719%
+Total time taken: 0 hrs : 9 mins : 20 secs
