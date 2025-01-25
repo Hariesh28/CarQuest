@@ -77,7 +77,7 @@ def get_all_variants(raw_data: dict) -> list[str] | None:
     return all_urls
 
 def delay() -> None:
-    time.sleep(random.uniform(2, 5))
+    time.sleep(random.uniform(0.03, 0.07))
 
 def extract_data(params):
 
@@ -190,7 +190,7 @@ def get_variant_data(raw_data: dict) -> dict | None:
 
     return data
 
-def normalize_data(data:dict[list[dict[str:str]]]) -> dict[list[dict[str:str]]]:
+def normalize_data(data: list[dict[str, str]]) -> list[dict[str, str]]:
 
     fieldnames = list({key for row in data for key in row.keys()})
 
