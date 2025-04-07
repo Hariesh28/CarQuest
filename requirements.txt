@@ -1,6 +1,5 @@
 beautifulsoup4
 requests
-csv
 streamlit
 mysql-connector-python
 pandas
