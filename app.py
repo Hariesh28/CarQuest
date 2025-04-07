@@ -303,11 +303,11 @@ if page == "Home":
     col1, col2, col3 = st.columns(3)
 
     with col1:
-        st.image("https://media.istockphoto.com/id/1167555914/photo/modern-red-suv-car-in-garage-with-lights-turned-on.jpg?s=612x612&w=0&k=20&c=DRKL152y8f0nxgcF-jfLAwM69YtcsYt86XHDEnCssI0=", caption="SUVs", use_container_width=True)
+        st.image("https://media.istockphoto.com/id/1167555914/photo/modern-red-suv-car-in-garage-with-lights-turned-on.jpg?s=612x612&w=0&k=20&c=DRKL152y8f0nxgcF-jfLAwM69YtcsYt86XHDEnCssI0=", caption="SUVs")
     with col2:
-        st.image("https://media.istockphoto.com/id/1264045166/photo/car-driving-on-a-road.jpg?s=612x612&w=0&k=20&c=vRYLFjs6XMBZv0rl6Pbk77AlZvFe9RC6gSZuqUe_jXs=", caption="Sedans", use_container_width=True)
+        st.image("https://media.istockphoto.com/id/1264045166/photo/car-driving-on-a-road.jpg?s=612x612&w=0&k=20&c=vRYLFjs6XMBZv0rl6Pbk77AlZvFe9RC6gSZuqUe_jXs=", caption="Sedans")
     with col3:
-        st.image("https://media.istockphoto.com/id/1486018004/photo/a-happy-handsome-adult-male-charging-his-expensive-electric-car-before-leaving-his-house-for.jpg?s=612x612&w=0&k=20&c=rY6SHolsHcNtS_y23F0DgAe0arV6KZ_c3-k9r7PNP9Q=", caption="Electric Cars", use_container_width=True)
+        st.image("https://media.istockphoto.com/id/1486018004/photo/a-happy-handsome-adult-male-charging-his-expensive-electric-car-before-leaving-his-house-for.jpg?s=612x612&w=0&k=20&c=rY6SHolsHcNtS_y23F0DgAe0arV6KZ_c3-k9r7PNP9Q=", caption="Electric Cars")
 
     st.markdown("---")
 
