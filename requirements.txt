@@ -1,3 +1,9 @@
 beautifulsoup4
 requests
 csv
+streamlit
+mysql-connector-python
+pandas
+Pillow
+google-generativeai
+python-dotenv
