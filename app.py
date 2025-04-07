@@ -54,7 +54,7 @@ def bool_to_label(val):
     return str(val)  # Fallback for other data types
 
 # --- SQL GENERATION USING GEMINI ---
-genai.configure(api_key=os.getenv("ppi"))
+genai.configure(api_key=os.getenv("PPI"))
 model = genai.GenerativeModel("gemini-1.5-flash")
 
 def convert_to_sql(user_query):
