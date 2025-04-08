@@ -369,6 +369,7 @@ if page == "Home":
 
 # --- PAGE: ASK IN ENGLISH ---
 elif page == "QuestAI":
+    st.subheader("QuestAI 💕")
     user_input = st.text_input("Ask me to find a car:")
     if st.button("Search"):
         if user_input:
@@ -499,7 +500,7 @@ elif page == "Filters":
             # Display detailed view for each result
             for _, car in df_results.iterrows():
                 with st.container():
-                    st.markdown(f"### {car['brand']} {car['model']} {car['variant']} ({car['type']})")
+                    st.markdown(f"### {car['variant']} ({car['type']})")
                     cols = st.columns([1, 2])
                     with cols[0]:
                         st.image(car["image_link"], width=250)
