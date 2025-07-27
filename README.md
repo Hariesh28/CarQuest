@@ -9,54 +9,53 @@ CarQuest is a web-based project designed to scrape data about cars and store it 
 - **Streamlit UI**: Provides a user-friendly interface for filtering and viewing car data.
 - **AI Chatbot**: Assists users in querying the database and suggesting car options.
 
+## Live Demo
+
+### [Experience CarQuest live:] [https://carquest.streamlit.app/](https://carquest.streamlit.app/)
+
 ## Installation
 
-1. **Clone the repository**:
-   ```bash
-   git clone https://github.com/Hariesh28/CarQuest.git
-   cd CarQuest
-   ```
+1.  **Clone the repository**:
+    ```bash
+    git clone [https://github.com/Hariesh28/CarQuest.git](https://github.com/Hariesh28/CarQuest.git)
+    cd CarQuest
+    ```
 
-2. **Set up the MySQL Database**:
-   - Ensure MySQL is installed and a database is created.
-   - Update the database credentials in the `config.py` file.
+2.  **Set up the MySQL Database**:
+    -   Ensure MySQL is installed and a database is created.
+    -   Update the database credentials in the `config.py` file.
 
-3. **Dependencies**:
-   - Install the required Python packages:
-     ```bash
-     pip install -r requirements.txt
-     ```
+3.  **Dependencies**:
+    -   Install the required Python packages:
+        ```bash
+        pip install -r requirements.txt
+        ```
 
-4. **Run the Web Scraper**:
-   - Execute the scraping script to collect car data:
-     ```bash
-     python scrape_data.py
-     ```
+4.  **Run the Web Scraper**:
+    -   Execute the scraping script to collect car data:
+        ```bash
+        python scrape_data.py
+        ```
 
-5. **Run the Streamlit App**:
-   - Launch the Streamlit app for UI interaction:
-     ```bash
-     streamlit run app.py
-     ```
-
-6. **AI Chatbot**:
-   - Train and deploy the AI chatbot to interact with the database:
-     ```bash
-     python chatbot.py
+5.  **Run the Streamlit App**:
+    -   Launch the Streamlit app for UI interaction:
+        ```bash
+        streamlit run app.py
+        ```
 
 ## Usage
 
-1. **Scraping**:
-   - Scrape car data using the specified scraping script.
+1.  **Scraping**:
+    -   Scrape car data using the specified scraping script.
 
-2. **Database Interaction**:
-   - Use SQL queries to manage and retrieve car data from the MySQL database.
+2.  **Database Interaction**:
+    -   Use SQL queries to manage and retrieve car data from the MySQL database.
 
-3. **Streamlit UI**:
-   - Access the Streamlit application to filter and view car listings.
+3.  **Streamlit UI**:
+    -   Access the Streamlit application to filter and view car listings.
 
-4. **AI Chatbot**:
-   - Engage with the chatbot to filter cars and suggest options based on user preferences.
+4.  **AI Chatbot**:
+    -   Engage with the chatbot to filter cars and suggest options based on user preferences.
 
 ## Contributing
 
