@@ -11,7 +11,7 @@ CarQuest is a web-based project designed to scrape data about cars and store it 
 
 ## Live Demo
 
-### [Experience CarQuest live:] [https://carquest.streamlit.app/](https://carquest.streamlit.app/)
+Experience CarQuest live: [https://carquest.streamlit.app/](https://carquest.streamlit.app/)
 
 ## Installation
 
